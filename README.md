@@ -95,6 +95,32 @@ The frontend includes realistic mock stock data so the application can be demons
 https://github.com/PandeyXmanas/StockSense
 ```
 
+## Demo Workflow Examples
+
+The project includes realistic sample inventory scenarios to support a polished product walkthrough:
+
+- Mumbai central warehouse receives TMT steel rods and fasteners from suppliers.
+- Pune distribution center tracks cement, pipes, and safety items for dispatch.
+- Bengaluru regional store manages office furniture, packaging materials, and stock movement approvals.
+- Low-stock alerts highlight items such as PVC pressure pipe and forklift battery inventory.
+- Internal transfers simulate movement from receiving bays to production floors and storage zones.
+
+## Project Screenshots
+
+The following are representative screens from the StockSense dashboard and inventory workflows:
+
+### Dashboard
+
+![Dashboard overview](docs/screenshots/dashboard-page.png)
+
+### Products Catalog
+
+![Products catalog](docs/screenshots/products-page.png)
+
+### Warehouses & Locations
+
+![Warehouse configuration](docs/screenshots/warehouses-page.png)
+
 ## Notes
 
 This repository is currently aligned for a polished product demo and presentation workflow, with realistic sample data to showcase the inventory management experience effectively.
