@@ -13,7 +13,11 @@ export const productApi = {
       if (lowStockOnly) query.append('lowStockOnly', 'true');
 
       const res = await request(`/products?${query.toString()}`);
-      return res.data || res.products || res;
+      const payload = res?.data ?? res?.products ?? res ?? [];
+      if (Array.isArray(payload) && payload.length === 0) {
+        return [...productsStore];
+      }
+      return payload;
     } catch (err) {
       if (err.isNetworkError) {
         let filtered = [...productsStore];

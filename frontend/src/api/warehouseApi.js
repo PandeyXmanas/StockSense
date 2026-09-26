@@ -8,7 +8,11 @@ export const warehouseApi = {
   async getWarehouses() {
     try {
       const res = await request('/warehouses');
-      return res.data || res.warehouses || res;
+      const payload = res?.data ?? res?.warehouses ?? res ?? [];
+      if (Array.isArray(payload) && payload.length === 0) {
+        return [...warehousesStore];
+      }
+      return payload;
     } catch (err) {
       if (err.isNetworkError) {
         return warehousesStore;
@@ -21,7 +25,14 @@ export const warehouseApi = {
     try {
       const endpoint = warehouseId ? `/locations?warehouseId=${warehouseId}` : '/locations';
       const res = await request(endpoint);
-      return res.data || res.locations || res;
+      const payload = res?.data ?? res?.locations ?? res ?? [];
+      if (Array.isArray(payload) && payload.length === 0) {
+        if (warehouseId) {
+          return locationsStore.filter((l) => l.warehouseId === warehouseId);
+        }
+        return [...locationsStore];
+      }
+      return payload;
     } catch (err) {
       if (err.isNetworkError) {
         if (warehouseId) {
