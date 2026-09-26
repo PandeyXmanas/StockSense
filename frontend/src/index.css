@@ -3,6 +3,7 @@
 @layer base {
   body {
     @apply bg-slate-50 text-slate-800 antialiased font-sans min-h-screen selection:bg-slate-200 selection:text-slate-900;
+    background-image: linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
   }
 }
 

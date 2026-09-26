@@ -116,6 +116,20 @@ export function DashboardPage() {
 
   return (
     <div className="space-y-6">
+      <div className="rounded-xl border border-indigo-200 bg-gradient-to-r from-indigo-900 via-slate-900 to-slate-800 p-5 text-white shadow-sm">
+        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+          <div>
+            <p className="text-[10px] uppercase tracking-[0.18em] text-indigo-200 font-semibold">Bharat Distribution Network</p>
+            <h2 className="mt-1 text-2xl font-bold tracking-tight">Maharashtra Industrial Inventory Control</h2>
+            <p className="mt-1 text-sm text-slate-200">Live view of warehouse stock, vendor receipts, dispatches, and movement approvals.</p>
+          </div>
+          <div className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-right">
+            <div className="text-[10px] uppercase tracking-[0.2em] text-indigo-200">Demo Site</div>
+            <div className="mt-1 text-lg font-bold">Pune • Mumbai • Bengaluru</div>
+          </div>
+        </div>
+      </div>
+
       {/* Page Header Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-white p-4 border border-slate-200 rounded-sm">
         <div>

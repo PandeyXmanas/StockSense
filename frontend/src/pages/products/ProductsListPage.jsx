@@ -18,16 +18,18 @@ export function ProductsListPage() {
   const [lowStockOnly, setLowStockOnly] = useState(false);
 
   // New product modal state
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newProduct, setNewProduct] = useState({
+  const getDefaultProductForm = () => ({
     name: '',
     sku: '',
-    categoryId: '',
+    categoryId: categories[0]?.id || '',
     unitOfMeasure: 'pcs',
     minReorderLevel: 10,
     initialStock: 0,
-    initialLocationId: ''
+    initialLocationId: locations[0]?.id || ''
   });
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newProduct, setNewProduct] = useState(getDefaultProductForm());
   const [formError, setFormError] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
@@ -48,10 +50,10 @@ export function ProductsListPage() {
       setProducts(prods);
       setCategories(cats);
       setLocations(locs);
-      if (cats.length > 0 && !newProduct.categoryId) {
+      if (cats.length > 0 && (!newProduct.categoryId || !cats.some((cat) => cat.id === newProduct.categoryId))) {
         setNewProduct((prev) => ({ ...prev, categoryId: cats[0].id }));
       }
-      if (locs.length > 0 && !newProduct.initialLocationId) {
+      if (locs.length > 0 && (!newProduct.initialLocationId || !locs.some((loc) => loc.id === newProduct.initialLocationId))) {
         setNewProduct((prev) => ({ ...prev, initialLocationId: locs[0].id }));
       }
     } catch (err) {
@@ -74,25 +76,42 @@ export function ProductsListPage() {
   const handleCreateProduct = async (e) => {
     e.preventDefault();
     setFormError('');
+
+    if (!newProduct.name.trim()) {
+      setFormError('Product name is required.');
+      return;
+    }
+    if (!newProduct.sku.trim()) {
+      setFormError('SKU or item code is required.');
+      return;
+    }
+    if (!newProduct.categoryId) {
+      setFormError('Please select a product category.');
+      return;
+    }
+    if (!newProduct.initialLocationId) {
+      setFormError('Please select the initial storage location.');
+      return;
+    }
+    if (Number(newProduct.minReorderLevel) < 0 || Number(newProduct.initialStock) < 0) {
+      setFormError('Stock and reorder values cannot be negative.');
+      return;
+    }
+
     setSubmitting(true);
 
     try {
       const targetLoc = locations.find((l) => l.id === newProduct.initialLocationId);
       await productApi.createProduct({
         ...newProduct,
+        name: newProduct.name.trim(),
+        sku: newProduct.sku.trim(),
+        unitOfMeasure: newProduct.unitOfMeasure.trim() || 'pcs',
         initialLocationName: targetLoc ? targetLoc.name : '',
         initialLocationCode: targetLoc ? targetLoc.code : ''
       });
       setIsModalOpen(false);
-      setNewProduct({
-        name: '',
-        sku: '',
-        categoryId: categories[0]?.id || '',
-        unitOfMeasure: 'pcs',
-        minReorderLevel: 10,
-        initialStock: 0,
-        initialLocationId: locations[0]?.id || ''
-      });
+      setNewProduct(getDefaultProductForm());
       loadData();
     } catch (err) {
       setFormError(err.message || 'Failed to create product.');

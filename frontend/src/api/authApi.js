@@ -3,8 +3,8 @@ import { request } from './httpClient';
 
 const MOCK_USER = {
   id: 'usr-001',
-  name: 'Alex Mercer',
-  email: 'alex.mercer@stocksense.com',
+  name: 'MANAS PANDEY',
+  email: 'manas.pandey@stocksense.com',
   role: 'Inventory Manager'
 };
 

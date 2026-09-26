@@ -16,14 +16,17 @@ export function ReceiptsPage() {
   const [searchQuery, setSearchQuery] = useState('');
 
   // Create Modal state
+  const createDefaultItemRow = (productOptions = []) => ({
+    productId: productOptions[0]?.id || '',
+    quantity: 1
+  });
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [products, setProducts] = useState([]);
   const [locations, setLocations] = useState([]);
   const [supplierName, setSupplierName] = useState('');
   const [destinationLocationId, setDestinationLocationId] = useState('');
-  const [items, setItems] = useState([
-    { productId: '', quantity: 1 }
-  ]);
+  const [items, setItems] = useState([createDefaultItemRow()]);
   const [formError, setFormError] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
@@ -38,11 +41,11 @@ export function ReceiptsPage() {
       setReceipts(data);
       setProducts(prods);
       setLocations(locs);
-      if (locs.length > 0 && !destinationLocationId) {
+      if (locs.length > 0 && (!destinationLocationId || !locs.some((loc) => loc.id === destinationLocationId))) {
         setDestinationLocationId(locs[0].id);
       }
-      if (prods.length > 0 && !items[0].productId) {
-        setItems([{ productId: prods[0].id, quantity: 1 }]);
+      if (prods.length > 0 && (!items[0] || !items[0].productId)) {
+        setItems([createDefaultItemRow(prods)]);
       }
     } catch (err) {
       console.error(err);
@@ -57,7 +60,7 @@ export function ReceiptsPage() {
 
   const handleAddItemRow = () => {
     if (products.length === 0) return;
-    setItems([...items, { productId: products[0].id, quantity: 1 }]);
+    setItems((prev) => [...prev, createDefaultItemRow(products)]);
   };
 
   const handleRemoveItemRow = (idx) => {
@@ -67,12 +70,21 @@ export function ReceiptsPage() {
   const handleCreateReceipt = async (e) => {
     e.preventDefault();
     setFormError('');
+
     if (!supplierName.trim()) {
       setFormError('Supplier Name is required.');
       return;
     }
-    if (items.length === 0) {
-      setFormError('At least one item must be added.');
+    if (!destinationLocationId) {
+      setFormError('Please select a destination warehouse location.');
+      return;
+    }
+    if (items.length === 0 || items.some((it) => !it.productId)) {
+      setFormError('Each line item must include a product.');
+      return;
+    }
+    if (items.some((it) => Number(it.quantity) <= 0)) {
+      setFormError('Each item quantity must be greater than zero.');
       return;
     }
 
@@ -92,7 +104,7 @@ export function ReceiptsPage() {
       });
 
       await operationApi.createReceipt({
-        supplierName,
+        supplierName: supplierName.trim(),
         destinationLocationId,
         destinationLocationName: loc ? `${loc.name} (${loc.code})` : 'Destination',
         items: formattedItems
@@ -100,6 +112,7 @@ export function ReceiptsPage() {
 
       setIsModalOpen(false);
       setSupplierName('');
+      setItems([createDefaultItemRow(products)]);
       loadReceipts();
     } catch (err) {
       setFormError(err.message || 'Failed to create receipt document.');

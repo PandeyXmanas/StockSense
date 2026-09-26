@@ -8,8 +8,8 @@ export function AuthProvider({ children }) {
     const saved = localStorage.getItem('stocksense_user');
     return saved ? JSON.parse(saved) : {
       id: 'usr-001',
-      name: 'Alex Mercer',
-      email: 'alex.mercer@stocksense.com',
+      name: 'MANAS PANDEY',
+      email: 'manas.pandey@stocksense.com',
       role: 'Inventory Manager'
     }; // Default logged-in user state for seamless initial viewing
   });
