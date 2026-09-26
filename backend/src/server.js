@@ -1,17 +1,21 @@
-require('dotenv').config();
 const app = require('./app');
+const { testConnection } = require('./config/database');
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
-const startServer = () => {
-  try {
-    app.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}`);
-    });
-  } catch (error) {
-    console.error('Failed to start server:', error);
-    process.exit(1);
-  }
+const startServer = async () => {
+  // Verify database connection
+  await testConnection();
+
+  app.listen(PORT, () => {
+    console.log(`[StockSense Backend] Server is running on port ${PORT}`);
+  });
 };
 
-startServer();
+if (require.main === module) {
+  startServer();
+}
+
+module.exports = { startServer };

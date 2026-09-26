@@ -9,9 +9,17 @@ app.use(cors());
 app.use(express.json());
 app.use(morgan('dev'));
 
-// Basic health check route
+// Basic health check routes
 app.get('/health', (req, res) => {
   res.status(200).json({ success: true, message: 'StockSense API is running' });
+});
+
+app.get('/api/health', (req, res) => {
+  res.status(200).json({
+    status: 'ok',
+    service: 'stocksense-backend',
+    timestamp: new Date().toISOString()
+  });
 });
 
 // API Routes
