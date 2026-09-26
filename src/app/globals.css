@@ -1,0 +1,38 @@
+@import "tailwindcss";
+
+@theme {
+  --color-charcoal: #121212;
+  --color-offwhite: #F9FAFB;
+  --color-warning: #FFCC00;
+  --color-violation: #FF3B30;
+  
+  --color-background: var(--color-offwhite);
+  --color-foreground: var(--color-charcoal);
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, monospace;
+}
+
+/* Enforce Brutalist Aesthetic */
+* {
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+}
+
+/* Remove scrollbars for cleaner data-dense views if needed, or leave default */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-offwhite);
+  border-left: 2px solid var(--color-charcoal);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-charcoal);
+}
